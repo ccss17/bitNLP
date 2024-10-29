@@ -69,7 +69,7 @@
 #' @importFrom stringi stri_enc_detect
 #' 
 morpho_mecab <- function(x, type = c("noun", "noun2", "verb", "adj", "morpheme"),
-                         indiv = TRUE, user_dic = NULL, as_list = FALSE) {
+                         indiv = TRUE, user_dic = NULL, as_list = FALSE, encoding = NULL) {
   if (!is_mecab_installed()) {
     stop("To use morpho_mecab(), you need to install mecab-ko and mecab-ko-dic.\nYou can install it with install_mecab_ko().")
   }
@@ -82,7 +82,9 @@ morpho_mecab <- function(x, type = c("noun", "noun2", "verb", "adj", "morpheme")
   
   type <- match.arg(type)
   
-  encoding <- unlist(stringi::stri_enc_detect(x))[1] 
+  if (is.null(encoding)) {
+    encoding <- unlist(stringi::stri_enc_detect(x))[1] 
+  }
 
   if (encoding != "UTF-8") {
     x <- iconv(x, encoding, "UTF-8")

@@ -68,7 +68,7 @@
 #' @importFrom stringr str_detect
 #' @importFrom stringi stri_enc_detect
 #' 
-morpho_mecab <- function(x, type = c("noun", "noun2", "verb", "adj", "morpheme"),
+morpho_mecab <- function(x, type = c("noun", "noun2", "verb", "adj", "morpheme", "all"),
                          indiv = TRUE, user_dic = NULL, as_list = FALSE, encoding = NULL) {
   if (!is_mecab_installed()) {
     stop("To use morpho_mecab(), you need to install mecab-ko and mecab-ko-dic.\nYou can install it with install_mecab_ko().")
@@ -120,6 +120,7 @@ morpho_mecab <- function(x, type = c("noun", "noun2", "verb", "adj", "morpheme")
     if (type %in% "noun2") pattern <- "^N"
     if (type == "verb") pattern <- "^VV"
     if (type == "adj") pattern <- "^VA"
+    if (type == "all") pattern <- "[^V|^N]"
     
     tokens <- tokens %>%
       purrr::map(

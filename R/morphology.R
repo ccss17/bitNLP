@@ -120,7 +120,7 @@ morpho_mecab <- function(x, type = c("noun", "noun2", "verb", "adj", "morpheme",
     if (type %in% "noun2") pattern <- "^N"
     if (type == "verb") pattern <- "^VV"
     if (type == "adj") pattern <- "^VA"
-    if (type == "all") pattern <- "(^V|^N)"
+    if (type == "all") pattern <- "(^V|^N|^M|^IC)"
     
     tokens <- tokens %>%
       purrr::map(

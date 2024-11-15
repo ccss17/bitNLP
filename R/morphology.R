@@ -68,8 +68,8 @@
 #' @importFrom stringr str_detect
 #' @importFrom stringi stri_enc_detect
 #' 
-morpho_mecab <- function(x, type = c("noun", "noun2", "verb", "adj", "morpheme", "all"),
-                         indiv = TRUE, user_dic = NULL, as_list = FALSE, encoding = NULL) {
+morpho_mecab <- function(x, indiv = TRUE, user_dic = NULL, as_list = FALSE, encoding = NULL,
+                         pattern = NULL) {
   if (!is_mecab_installed()) {
     stop("To use morpho_mecab(), you need to install mecab-ko and mecab-ko-dic.\nYou can install it with install_mecab_ko().")
   }
@@ -79,8 +79,6 @@ morpho_mecab <- function(x, type = c("noun", "noun2", "verb", "adj", "morpheme",
   if (!is.element("RcppMeCab", packages)) {
     stop("To use morpho_mecab(), you need to install RcppMeCab package.\nYou can install it with install.packages(\"RcppMeCab\").")
   }  
-  
-  type <- match.arg(type)
   
   if (is.null(encoding)) {
     encoding <- unlist(stringi::stri_enc_detect(x))[1] 
@@ -115,13 +113,7 @@ morpho_mecab <- function(x, type = c("noun", "noun2", "verb", "adj", "morpheme",
   
   names(tokens) <- NULL
   
-  if (type != "morpheme") {
-    if (type %in% "noun") pattern <- "NNG"
-    if (type %in% "noun2") pattern <- "^N"
-    if (type == "verb") pattern <- "^VV"
-    if (type == "adj") pattern <- "^VA"
-    if (type == "all") pattern <- "(^V|^N|^M|^IC)"
-    
+  if (!is.null(pattern)) {
     tokens <- tokens %>%
       purrr::map(
         function(token) {
